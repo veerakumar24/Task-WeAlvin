@@ -1,0 +1,29 @@
+@Library('github.com/releaseworks/jenkinslib') _
+pipeline {
+  agent any
+  environment {
+    AWS_REGION = 'us-east-1' // Replace with your Amplify app's region
+    APP_ID = 'd3u5r7d3ex0azi'  // Replace with your Amplify App ID
+    BRANCH_NAME = 'main' // Replace with your Amplify branch name
+  }
+  stages {
+    stage('Trigger Amplify Deployment') {
+      steps {
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'veera']]) {
+          script {
+            echo "Triggering redeployment for branch ${BRANCH_NAME} in Amplify app ${APP_ID}"
+            
+            // Start a new deployment job in Amplify
+            sh """
+            aws amplify start-job \
+              --app-id ${APP_ID} \
+              --branch-name ${BRANCH_NAME} \
+              --job-type RELEASE \
+              --region ${AWS_REGION}
+            """
+          }
+        }
+      }
+    }
+  }
+}
