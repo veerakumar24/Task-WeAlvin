@@ -1,6 +1,6 @@
 This repository outlines the architecture and implementation of a CI/CD pipeline system using Jenkins, AWS, MongoDB, and React.js for both staging and production environments. The system automates the build and deployment process of frontend and backend services to AWS once code is pushed to the GitHub repository's staging or production branch.
 
-##Architecture Components
+*Architecture Components*
 
 ####Jenkins Server:
 
