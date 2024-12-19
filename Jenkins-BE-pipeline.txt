@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# Function to check if Node.js is installed
+check_node_installed() {
+    if ! command -v node &> /dev/null
+    then
+        echo "Node.js is not installed. Installing Node.js..."
+        # Install Node.js and npm
+        sudo apt update
+        sudo apt install -y nodejs npm
+    else
+        echo "Node.js is already installed. Version: $(node -v)"
+    fi
+}
+
+# Function to check if npm is installed
+check_npm_installed() {
+    if ! command -v npm &> /dev/null
+    then
+        echo "npm is not installed. Installing npm..."
+        # Install npm if not installed
+        sudo apt install -y npm
+    else
+        echo "npm is already installed. Version: $(npm -v)"
+    fi
+}
+
+# Install Node.js and npm
+check_node_installed
+check_npm_installed
+
+# Ensure npm is in the PATH
+export PATH=$PATH:/usr/local/bin
+
+# Confirm installation
+echo "Node.js and npm installation complete."
+echo "Node.js version: $(node -v)"
+echo "npm version: $(npm -v)"
+
+# Clone the GitHub repository if not already cloned
+REPO_DIR="/var/lib/jenkins/workspace/BE"
+if [ ! -d "$REPO_DIR" ]; then
+    echo "Cloning the GitHub repository..."
+    git clone https://github.com/veerakumar24/WeAlvin-Devlopment.git "$REPO_DIR"
+else
+    echo "Repository already cloned."
+    # Pull the latest changes
+    cd "$REPO_DIR"
+    git pull origin main
+fi
+
+# Navigate to the 'backend' directory inside the cloned repo
+cd "$REPO_DIR/backend"
+
+# Install npm dependencies
+npm install
+
+# Start the application
+npm start
